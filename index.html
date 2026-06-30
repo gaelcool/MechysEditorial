@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta author="Hannah Gael">
+    <title>Mechy Classics</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f3f0e8;
+            color: #241f1a;
+            font-family: Georgia, "Times New Roman", serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Header ─────────────────────────────────────────────── */
+
+        header {
+            padding: 1.75rem 2.5rem;
+            border-bottom: 4px solid #2b2118;
+            background: #2b2118;
+            color: #f3f0e8;
+            display: flex;
+            align-items: baseline;
+            gap: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 1.85rem;
+            font-weight: normal;
+            letter-spacing: 0.06em;
+        }
+
+        .tagline {
+            font-size: 0.83rem;
+            color: #d8c9b8;
+            font-style: italic;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── Catalog ─────────────────────────────────────────────── */
+
+        .catalog {
+            width: 100%;
+            max-width: 980px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            flex: 1;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #6b5c4e;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #2b2118;
+        }
+
+        .about-note {
+            display: none;
+            max-width: 760px;
+            margin: 0 0 2.25rem;
+            padding: 0.85rem 1rem 0.85rem 1.1rem;
+            border-left: 3px solid #6f4a2f;
+            background: #ebe5d9;
+            color: #3d332a;
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        .about-note.open {
+            display: block;
+        }
+
+        .quiet-link {
+            color: inherit;
+            text-decoration-color: rgba(111, 74, 47, 0.45);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 0.16em;
+        }
+
+        .quiet-link:hover,
+        .quiet-link:focus-visible {
+            color: #6f4a2f;
+            text-decoration-color: currentColor;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 3rem 2rem;
+        }
+
+        /* ── Book cards ──────────────────────────────────────────── */
+
+        .book-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            outline: none;
+        }
+
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            border: 3px solid #2b2118;
+            background: #8a5a35;
+            color: #fff8e8;
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            overflow: hidden;
+            transition: transform 170ms ease, box-shadow 170ms ease;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .book-card:hover .book-cover,
+        .book-card:focus-visible .book-cover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px rgba(36, 31, 26, 0.2);
+        }
+
+        .card-title {
+            font-size: 0.92rem;
+            line-height: 1.3;
+        }
+
+        .card-meta {
+            font-size: 0.76rem;
+            color: #6b5c4e;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+
+        .qsbtn {
+            cursor: pointer;
+            width: 1.45rem;
+            height: 1.45rem;
+            border: 1px solid #6f4a2f;
+            border-radius: 50%;
+            background: transparent;
+            color: #6f4a2f;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.72rem;
+            font-weight: bold;
+            line-height: 1;
+            vertical-align: middle;
+            transition: background 120ms ease, color 120ms ease;
+        }
+
+        .qsbtn:hover,
+        .qsbtn[aria-expanded="true"] {
+            background: #6f4a2f;
+            color: #fff8e8;
+        }
+
+        /* ── Modal overlay ───────────────────────────────────────── */
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(36, 31, 26, 0.72);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .overlay.open {
+            display: flex;
+        }
+
+        /* ── Modal panel ─────────────────────────────────────────── */
+
+        .modal {
+            background: #f3f0e8;
+            border: 4px solid #2b2118;
+            width: 100%;
+            max-width: 640px;
+            max-height: 88vh;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 160px 1fr;
+        }
+
+        .modal-cover-col {
+            background: #8a5a35;
+            border-right: 4px solid #2b2118;
+            display: grid;
+            place-items: center;
+            padding: 1.5rem;
+            color: #fff8e8;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            text-align: center;
+        }
+
+        .modal-cover-col img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .modal-body {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            line-height: 1.2;
+        }
+
+        .modal-date {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            color: #6b5c4e;
+            margin-top: -0.25rem;
+        }
+
+        .modal-desc {
+            font-size: 0.88rem;
+            line-height: 1.72;
+            flex: 1;
+        }
+
+        .authors-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #6b5c4e;
+        }
+
+        .modal-authors {
+            font-size: 0.8rem;
+            color: #4a3d32;
+            font-style: italic;
+            line-height: 1.65;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #2b2118;
+        }
+
+        .btn-dl {
+            background: #2b2118;
+            color: #f3f0e8;
+            border: none;
+            padding: 0.6rem 1.35rem;
+            font-family: Georgia, serif;
+            font-size: 0.76rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 120ms;
+        }
+
+        .btn-dl:hover {
+            background: #8a5a35;
+        }
+
+        .btn-dl.unavailable {
+            background: #9e958a;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .btn-close {
+            margin-left: auto;
+            background: none;
+            border: 1px solid #2b2118;
+            padding: 0.6rem 1rem;
+            font-family: Georgia, serif;
+            font-size: 0.76rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            color: #241f1a;
+        }
+
+        .btn-close:hover {
+            background: #e8e3d8;
+        }
+
+        /* ── States ──────────────────────────────────────────────── */
+
+        .catalog-msg {
+            color: #6b5c4e;
+            font-style: italic;
+            font-size: 0.9rem;
+            grid-column: 1 / -1;
+        }
+
+        footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 2.4rem;
+            margin-top: auto;
+            background-color: #6f4a2f;
+            border-top: 0.15rem solid #2b2118;
+            color: #fff8e8;
+            text-align: center;
+        }
+
+        footer p {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 520px) {
+            header {
+                padding: 1.25rem 1.25rem;
+                gap: 0.5rem;
+                flex-direction: column;
+            }
+
+            .catalog {
+                padding: 0 1.25rem;
+                margin-top: 2rem;
+            }
+
+            .modal {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-cover-col {
+                border-right: none;
+                border-bottom: 4px solid #2b2118;
+                min-height: 140px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1 class="brand">Mechy Classics</h1>
+        <span class="tagline">Textos recuperados &middot; voces que permanecen</span>
+    </header>
+
+    <section class="catalog" aria-label="Catálogo de libros">
+        <p class="section-label">Catálogo <button id="moar" class="qsbtn" type="button" title="¿Qué es esto?"
+                aria-expanded="false" aria-controls="about-catalog">?</button></p>
+        <p class="about-note" id="about-catalog">
+            Este sitio fue creado por <a class="quiet-link" href="https://links.lamaquinaveridica.shop">Gael</a> para
+            compartir textos de valor
+            cultural. Este catálogo reúne obras para
+            hojear, descargar y leer con calma, manteniendo vivas las voces que forman parte de nuestra cultura.
+        </p>
+        <div class="book-grid" id="grid">
+            <p class="catalog-msg">Cargando catálogo&hellip;</p>
+        </div>
+    </section>
+
+    <!-- Detail modal -->
+    <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="m-title">
+        <div class="modal" id="modal">
+            <div class="modal-cover-col" id="m-cover"></div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="m-title"></h2>
+                <p class="modal-date" id="m-date"></p>
+                <p class="modal-desc" id="m-desc"></p>
+                <p class="authors-label">Autores</p>
+                <p class="modal-authors" id="m-authors"></p>
+                <div class="modal-actions">
+                    <a class="btn-dl" id="m-dl" href="#">Descarga</a>
+                    <button class="btn-close" id="btn-close">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Buena suerte</p>
+    </footer>
+    <script>
+        // ── Helpers ──────────────────────────────────────────────────────────────
+
+        function abbrev(authors) {
+            if (authors.length <= 2) return authors.join(', ');
+            return authors[0] + ' y ' + (authors.length - 1) + '\u00a0autores más';
+        }
+
+        /**
+         * Parse the catalog's print-date field.
+         * Accepts "YYYY-MM-DD", "YYYY-DD-MM", and "YYYY-MM-DD:HH:mm.ss-Z" variants.
+         * If the second segment > 12, treat it as the day (day/month swap guard).
+         */
+        function fmtDate(raw) {
+            const parts = (raw || '').split(':')[0].split('-');
+            if (parts.length < 3) return raw || '';
+            const [y, a, b] = parts.map(Number);
+            const month = a > 12 ? b : a;
+            const day = a > 12 ? a : b;
+            const names = [
+                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+            ];
+            return day + '\u00a0de\u00a0' + (names[month - 1] || month) + '\u00a0de\u00a0' + y;
+        }
+
+        function escape(str) {
+            return (str || '').replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // ── Modal ────────────────────────────────────────────────────────────────
+
+        const overlay = document.getElementById('overlay');
+        const btnClose = document.getElementById('btn-close');
+
+        function openModal(book) {
+            const coverCol = document.getElementById('m-cover');
+            coverCol.innerHTML = book.cover
+                ? '<img src="' + escape(book.cover) + '" alt="Portada de ' + escape(book.title) + '">'
+                : escape(book.title);
+
+            document.getElementById('m-title').textContent = book.title || '';
+            document.getElementById('m-date').textContent = fmtDate(book['print-date']);
+            document.getElementById('m-desc').textContent = book.desc || '';
+            document.getElementById('m-authors').textContent = (book.authors || []).join(' · ');
+
+            const dlBtn = document.getElementById('m-dl');
+            if (book.pdf) {
+                dlBtn.href = book.pdf;
+                dlBtn.setAttribute('download', '');
+                dlBtn.classList.remove('unavailable');
+                dlBtn.textContent = 'Descarga';
+            } else {
+                dlBtn.removeAttribute('href');
+                dlBtn.removeAttribute('download');
+                dlBtn.classList.add('unavailable');
+                dlBtn.textContent = 'Próximamente';
+            }
+
+            overlay.classList.add('open');
+            btnClose.focus();
+        }
+
+        function closeModal() { overlay.classList.remove('open'); }
+
+        btnClose.addEventListener('click', closeModal);
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        fetch('catalog.json')
+            .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+            .then(books => {
+                const grid = document.getElementById('grid');
+                grid.innerHTML = '';
+
+                books.forEach(book => {
+                    const card = document.createElement('article');
+                    card.className = 'book-card';
+                    card.tabIndex = 0;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', 'Ver detalles de ' + (book.title || 'libro'));
+
+                    const coverInner = book.cover
+                        ? '<img src="' + escape(book.cover) + '" alt="Portada de ' + escape(book.title) + '">'
+                        : '<span>' + escape(book.title) + '</span>';
+
+                    card.innerHTML =
+                        '<div class="book-cover">' + coverInner + '</div>' +
+                        '<p class="card-title">' + escape(book.title) + '</p>' +
+                        '<p class="card-meta">' + escape(abbrev(book.authors || [])) + '</p>';
+
+                    card.addEventListener('click', () => openModal(book));
+                    grid.appendChild(card);
+                });
+            })
+            .catch(() => {
+                document.getElementById('grid').innerHTML =
+                    '<p class="catalog-msg">No se pudo cargar el catálogo. ' +
+                    'Verifica que catalog.json esté en el mismo directorio.</p>';
+            });
+        document.getElementById('moar').addEventListener('click', () => {
+            const btn = document.getElementById('moar');
+            const about = document.getElementById('about-catalog');
+            const isOpen = about.classList.toggle('open');
+            btn.setAttribute('aria-expanded', isOpen);
+        });
+
+    </script>
+</body>
+
+</html>
