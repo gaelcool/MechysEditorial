@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mechy Classics | Authors That Matter</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #e9e4dc;
+            color: #29231e;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .top-section {
+            border-bottom: 1px solid #c9c1b6;
+            padding: 0 40px 22px;
+        }
+
+        .masthead {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 42px;
+            min-height: 40px;
+        }
+
+        .brand {
+            font-size: 1.95rem;
+            font-style: italic;
+            font-weight: 700;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .page-title {
+            color: #756c62;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.46em;
+            text-transform: uppercase;
+            word-spacing: 0.8em;
+        }
+
+        .author-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 72px;
+            padding: 96px 40px 64px;
+        }
+
+        .portrait {
+            width: 188px;
+        }
+
+        .portrait-placeholder {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 233px;
+            background: #d2d0cd;
+            overflow: hidden;
+        }
+
+        .box-icon {
+            position: relative;
+            width: 92px;
+            height: 58px;
+            margin-top: 54px;
+            background: #9c803a;
+            border: 5px solid #111;
+            transform: perspective(100px) rotateX(3deg);
+        }
+
+        .box-icon::before,
+        .box-icon::after {
+            content: "";
+            position: absolute;
+            top: -31px;
+            width: 56px;
+            height: 35px;
+            background: #d1bd70;
+            border: 5px solid #111;
+        }
+
+        .box-icon::before {
+            left: -7px;
+            transform: skewY(-18deg);
+        }
+
+        .box-icon::after {
+            right: -7px;
+            transform: skewY(18deg);
+        }
+
+        .question {
+            position: absolute;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .question.one {
+            top: 8px;
+            left: 30px;
+            font-size: 3.2rem;
+            transform: rotate(8deg);
+        }
+
+        .question.two {
+            top: 42px;
+            left: 82px;
+            font-size: 4.1rem;
+            transform: rotate(4deg);
+        }
+
+        .question.three {
+            top: 17px;
+            right: 24px;
+            font-size: 3.3rem;
+            transform: rotate(-8deg);
+        }
+
+        .portrait-name {
+            margin-top: 16px;
+            font-size: 1.42rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .portrait-role {
+            margin-top: 8px;
+            color: #746b60;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.34em;
+            text-transform: uppercase;
+        }
+
+        .bio {
+            max-width: 300px;
+            padding-top: 10px;
+        }
+
+        .rule {
+            width: 42px;
+            border-top: 2px solid #8a542b;
+            margin-bottom: 28px;
+        }
+
+        .bio p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .bottom-section {
+            padding: 0 40px 60px;
+        }
+
+        .action-row {
+            display: flex;
+            border: 1px solid #c9c1b6;
+        }
+
+        .action-button {
+            flex: 1 1 0;
+            min-height: 46px;
+            border: 0;
+            border-right: 1px solid #c9c1b6;
+            background: transparent;
+            color: #766b61;
+            cursor: default;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.36em;
+            text-transform: uppercase;
+        }
+
+        .action-button:last-child {
+            border-right: 0;
+        }
+
+        .work-button {
+            color: #1f1a16;
+            cursor: pointer;
+        }
+
+        .work-button::after {
+            content: "^";
+            display: inline-block;
+            margin-left: 10px;
+            color: #7d746a;
+            font-size: 0.74rem;
+        }
+
+        .work-button[aria-expanded="false"]::after {
+            transform: rotate(180deg);
+        }
+
+        .work-panel {
+            display: none;
+            border: 1px solid #c9c1b6;
+            border-top: 0;
+            background: #e1dbd1;
+        }
+
+        .work-panel.open {
+            display: block;
+        }
+
+        .works-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .works-table th,
+        .works-table td {
+            border-bottom: 1px solid #c9c1b6;
+            padding: 20px 28px;
+            vertical-align: middle;
+        }
+
+        .works-table th {
+            color: #756c62;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.68rem;
+            font-weight: 400;
+            letter-spacing: 0.36em;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        .works-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .works-table .num {
+            width: 12%;
+            color: #6d6258;
+            font-family: "Courier New", monospace;
+            font-size: 0.8rem;
+        }
+
+        .works-table .title {
+            width: 35%;
+            font-size: 1rem;
+            font-style: italic;
+            line-height: 1.25;
+        }
+
+        .works-table .issue {
+            width: 16%;
+            color: #8a542b;
+            font-family: "Courier New", monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .works-table .source {
+            width: 37%;
+            color: #655d55;
+            font-family: "Courier New", monospace;
+            font-size: 0.78rem;
+            line-height: 1.35;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <section class="top-section" aria-labelledby="page-heading">
+            <div class="masthead">
+                <h1 class="brand" id="page-heading">Mechy Classics</h1>
+                <p class="page-title">Authors That Matter</p>
+            </div>
+        </section>
+
+        <section class="author-section" aria-label="Featured author">
+            <div class="portrait">
+                <div class="portrait-placeholder" aria-label="Author image placeholder" role="img">
+                    <span class="question one">?</span>
+                    <span class="question two">?</span>
+                    <span class="question three">?</span>
+                    <span class="box-icon" aria-hidden="true"></span>
+                </div>
+                <h2 class="portrait-name">Elara Voss</h2>
+                <p class="portrait-role">Contributor</p>
+            </div>
+
+            <div class="bio">
+                <div class="rule" aria-hidden="true"></div>
+                <p>Elara Voss is a speculative fiction writer and this description should be 120 words max.</p>
+            </div>
+        </section>
+
+        <section class="bottom-section" aria-label="Author actions">
+            <div class="action-row">
+                <button class="action-button work-button" type="button" aria-expanded="true" aria-controls="work-panel">
+                    Work
+                </button>
+                <button class="action-button" type="button">Contact</button>
+                <button class="action-button" type="button">Back</button>
+            </div>
+
+            <div class="work-panel open" id="work-panel">
+                <table class="works-table">
+                    <thead>
+                        <tr>
+                            <th class="num">#</th>
+                            <th class="title">Title</th>
+                            <th class="issue">No.</th>
+                            <th class="source">Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="num">01</td>
+                            <td class="title">The Gearwork Elegy</td>
+                            <td class="issue">x4</td>
+                            <td class="source">The Paris Review</td>
+                        </tr>
+                        <tr>
+                            <td class="num">02</td>
+                            <td class="title">Iron Pastoral</td>
+                            <td class="issue">x11</td>
+                            <td class="source">Granta</td>
+                        </tr>
+                        <tr>
+                            <td class="num">03</td>
+                            <td class="title">Cartography of Rust</td>
+                            <td class="issue">x2</td>
+                            <td class="source">n+1</td>
+                        </tr>
+                        <tr>
+                            <td class="num">04</td>
+                            <td class="title">A Chorus of Pistons</td>
+                            <td class="issue">x7</td>
+                            <td class="source">Tin House</td>
+                        </tr>
+                        <tr>
+                            <td class="num">05</td>
+                            <td class="title">Meridian Silence</td>
+                            <td class="issue">x1</td>
+                            <td class="source">The Kenyon Review</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const workButton = document.querySelector(".work-button");
+        const workPanel = document.querySelector("#work-panel");
+
+        workButton.addEventListener("click", () => {
+            const isOpen = workPanel.classList.toggle("open");
+            workButton.setAttribute("aria-expanded", String(isOpen));
+        });
+    </script>
+</body>
+
+</html>
