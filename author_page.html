@@ -1,10 +1,11 @@
+<!-- Go will handle the backend so that we dont need sessions and the available URIs are referenceble beyond testing -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mechy Classics | Authors That Matter</title>
+    <title>Mechy Classics | Autor</title>
     <style>
         * {
             box-sizing: border-box;
@@ -301,13 +302,17 @@
                     <span class="question three">?</span>
                     <span class="box-icon" aria-hidden="true"></span>
                 </div>
-                <h2 class="portrait-name">Elara Voss</h2>
-                <p class="portrait-role">Contributor</p>
+                <h2 class="portrait-name"> {{if .Author.Name}}{{.Author.Name}}{{else}}Autor no especificado{{end}}
+
+                </h2>
+                <p class="portrait-role" id="totalwork">
+                    {{len .Works}} obras publicadas
+                </p>
             </div>
 
             <div class="bio">
                 <div class="rule" aria-hidden="true"></div>
-                <p>Elara Voss is a speculative fiction writer and this description should be 120 words max.</p>
+                <p id="author-bio">{{if .Author.Bio}}{{.Author.Bio}}{{else}}Biografía no disponible{{end}}</p>
             </div>
         </section>
 
@@ -352,7 +357,7 @@
                         <tr>
                             <td class="num">04</td>
                             <td class="title">A Chorus of Pistons</td>
-                            <td class="issue">x7</td>
+                            <td class="issue"></td>
                             <td class="source">Tin House</td>
                         </tr>
                         <tr>
@@ -368,6 +373,7 @@
     </main>
 
     <script>
+
         const workButton = document.querySelector(".work-button");
         const workPanel = document.querySelector("#work-panel");
 
